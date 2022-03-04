@@ -38,8 +38,8 @@ def choose_ship_option():
     user_input = input('''
 Choose option: 
 
-    [1] 1-block-long ship 
-    [2] 2-blocks-long ship
+    [1] Add 1-block-long ship 
+    [2] Add 2-blocks-long ship
             
 ''')
     return user_input

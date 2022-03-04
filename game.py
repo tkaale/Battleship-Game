@@ -50,9 +50,9 @@ def row_title(board):
         row_title.append(sublist[0])
     return row_title  #[' ', 'A', 'B', 'C', 'D', 'E']
 
-def user_coordinates(board):   
+def user_coordinates(board, title):   
     while True:
-        user_input = input('\nPlease provide a coordinates: ').upper()
+        user_input = input(f'\n{title}').upper()
         if len(user_input) < 2 or not user_input[ROW].isalpha() or not user_input[COL].isnumeric():
             ui.print_red('\nWrong! You should write B4, A1, G7 etc etc.')
             continue
@@ -79,36 +79,48 @@ def user_coordinates_convert(board, user_input):
 def set_ships(player, blocks, board):
     print(f"\nIt's time for {player} to set ships.\nShips can be only 1-block long and 2-blocks long. You have {blocks} blocks to use.\nPress ENTER to continue")
     input()
-    while True:
+    ships = []
+    print_board(board, player)
+    while blocks > 0:
+        ui.print_green(f"\nAmount of blocks to use: {blocks}")
+        user_input = ui.choose_ship_option()
         while True:
-            user_input = ui.choose_ship_option()
             if user_input == '1':
-                coordinates = user_coordinates_convert(board, user_coordinates(board)) 
+                coordinates = user_coordinates_convert(board, user_coordinates(board, "Please provide coordinates: ")) 
                 board = set_ship_on_board(board,coordinates)
                 print_board(board, player)
                 blocks -= 1
-                return board
+                ships.append([coordinates])
+                break
             if user_input == '2':
-                coordinates_one = user_coordinates_convert(board, user_coordinates(board))
-                board = set_ship_on_board(board, coordinates_one)
-                print_board(board, player)
-                check_coordinates = ui.blocking_more_than_2_blocks(coordinates_one)
-                coordinates_two = user_coordinates_convert(board, user_coordinates(board))
-                if coordinates_two in check_coordinates:
-                    board = set_ship_on_board(board, coordinates_two)
-                    print_board(board, player)
-                    blocks -= 2
+                if blocks == 1:
+                    ui.print_red('\nYou can only set 1-block-long ship!')
+                    break
                 else:
-                    ui.print_red("\nYou choose 2-block-long ship. \nYou have to set your ship next to first block. Try again")
-      
+                    coordinates_one = user_coordinates_convert(board, user_coordinates(board, "Please provide start coordinates: "))
+                    coordinates_two = user_coordinates_convert(board, user_coordinates(board, "Please provide end coordinates: "))
+                    check_coordinates = ui.blocking_more_than_2_blocks(coordinates_one)
+                    if coordinates_two in check_coordinates:
+                        board = set_ship_on_board(board, coordinates_one)
+                        board = set_ship_on_board(board, coordinates_two)
+                        print_board(board, player)
+                        blocks -= 2
+                        ships.append([coordinates_one, coordinates_two])
+                        break
+                    else:
+                        ui.print_red("\nYou choose 2-block-long ship. \nYou have to set your ship next to first block. Try again")
             else:
                 ui.print_red('\nThere is no such option.')
-                continue
+                break
+    return ships
 
 def set_ship_on_board(board,coordinates):
     coordinates_row = coordinates[ROW]
     coordinates_col = coordinates[COL]
-    board[coordinates_row][coordinates_col] = 'X'
+    if board[coordinates_row][coordinates_col] == 'X':
+        print('You already set here a ship')
+    else:
+        board[coordinates_row][coordinates_col] = 'X'
     return board
 
 #print(set_1_long_ship(BOARD_PLR_ONE, [1,1]))
