@@ -4,7 +4,8 @@ import ui
 BOARD_PLR_ONE = data_menager.get_table_from_file('Battleship-Game/board_one.cvs') 
 BOARD_PLR_TWO = data_menager.get_table_from_file('Battleship-Game/board_two.cvs')
 
-
+FILE_BOARD_ONE = 'Battleship-Game/board_one.cvs'
+FILE_BOARD_TWO = 'Battleship-Game/board_two.cvs'
 COL = 1
 ROW = 0
 
@@ -15,20 +16,20 @@ def choose_board():
             board = ui.board_big()
             data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_one.cvs')
             data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_two.cvs')
+            ui.print_green('\nYou choose BIG board.\n')
             break
         if user_input == 'S':
             board = ui.board_small()
             data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_one.cvs')
             data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_two.cvs')
+            ui.print_green('\nYou choose SMALL board.\n')
             break
         else:
             ui.print_red('\nYou should choose [B] or [S]! Try again.\n')            
             continue  
 
-choose_board()
-
 def print_board(board, player):
-    ui.print_red('\n ' + player + '\n')
+    ui.print_red(f'\n {player}\n')
     for sublist in board:
         print(' '.join(sublist))
 
@@ -40,7 +41,6 @@ def print_two_boards(board_one, board_two):
         print(' '.join(board_two[i]))
 
 def col_title(board):
-    print(board)
     col_title = board[0]
     return col_title   #[' ', '1', '2', '3', '4', '5']
 
@@ -52,7 +52,7 @@ def row_title(board):
 
 def user_coordinates(board):   
     while True:
-        user_input = input('Please provide a coordinates: ').upper()
+        user_input = input('\nPlease provide a coordinates: ').upper()
         if len(user_input) < 2 or not user_input[ROW].isalpha() or not user_input[COL].isnumeric():
             ui.print_red('\nWrong! You should write B4, A1, G7 etc etc.')
             continue
@@ -60,7 +60,8 @@ def user_coordinates(board):
             if user_input[ROW] not in row_title(board) or user_input[COL] not in col_title(board):
                 ui.print_red('Wrong! Try again')
                 continue
-            break
+            else:
+                break
     return user_input
 
 def user_coordinates_convert(board, user_input):
@@ -68,18 +69,62 @@ def user_coordinates_convert(board, user_input):
     for element in row_title(board):
         if element == user_input[ROW]:
             row_index = row_title(board).index(element)
-            user_input_convert.append(row_index)
+            user_input_convert.append(int(row_index))
     for element in col_title(board):
         if element == user_input[COL]:
             col_index = col_title(board).index(element)
-            user_input_convert.append(col_index)
+            user_input_convert.append(int(col_index))
     return user_input_convert
 
-def set_ships():
-    pass
+def set_ships(player, blocks, board):
+    print(f"\nIt's time for {player} to set ships.\nShips can be only 1-block long and 2-blocks long. You have {blocks} blocks to use.\nPress ENTER to continue")
+    input()
+    while True:
+        while True:
+            user_input = ui.choose_ship_option()
+            if user_input == '1':
+                coordinates = user_coordinates_convert(board, user_coordinates(board)) 
+                board = set_ship_on_board(board,coordinates)
+                print_board(board, player)
+                blocks -= 1
+                return board
+            if user_input == '2':
+                coordinates_one = user_coordinates_convert(board, user_coordinates(board))
+                board = set_ship_on_board(board, coordinates_one)
+                print_board(board, player)
+                check_coordinates = ui.blocking_more_than_2_blocks(coordinates_one)
+                coordinates_two = user_coordinates_convert(board, user_coordinates(board))
+                if coordinates_two in check_coordinates:
+                    board = set_ship_on_board(board, coordinates_two)
+                    print_board(board, player)
+                    blocks -= 2
+                else:
+                    ui.print_red("\nYou choose 2-block-long ship. \nYou have to set your ship next to first block. Try again")
+      
+            else:
+                ui.print_red('\nThere is no such option.')
+                continue
+
+def set_ship_on_board(board,coordinates):
+    coordinates_row = coordinates[ROW]
+    coordinates_col = coordinates[COL]
+    board[coordinates_row][coordinates_col] = 'X'
+    return board
+
+#print(set_1_long_ship(BOARD_PLR_ONE, [1,1]))
+        
+
+ 
+
+
+    
+
+set_ships('PLAYER ONE', 6, BOARD_PLR_ONE)
 
 def main():
-    ui.start_title()
+    # ui.start_title()
+    # choose_board()
+    pass
 
 if __name__ == '__main__':
     main()
