@@ -8,8 +8,27 @@ BOARD_PLR_TWO = data_menager.get_table_from_file('Battleship-Game/board_two.cvs'
 COL = 1
 ROW = 0
 
+def choose_board():
+    while True:
+        user_input = input('Do you wanna play big or small board? [B] BIG / [S] SMALL: ').upper()
+        if user_input == 'B':
+            board = ui.board_big()
+            data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_one.cvs')
+            data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_two.cvs')
+            break
+        if user_input == 'S':
+            board = ui.board_small()
+            data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_one.cvs')
+            data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_two.cvs')
+            break
+        else:
+            ui.print_red('\nYou should choose [B] or [S]! Try again.\n')            
+            continue  
+
+choose_board()
+
 def print_board(board, player):
-    ui.print_red('\n ', player, '\n')
+    ui.print_red('\n ' + player + '\n')
     for sublist in board:
         print(' '.join(sublist))
 
@@ -55,7 +74,6 @@ def user_coordinates_convert(board, user_input):
             col_index = col_title(board).index(element)
             user_input_convert.append(col_index)
     return user_input_convert
-
 
 def set_ships():
     pass
