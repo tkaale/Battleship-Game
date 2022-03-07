@@ -31,8 +31,39 @@ def board_small():
     return board
 
 def board_big():
-    board = [[' ', '1', '2', '3', '4', '5','6','7','8','9','10'], ['A', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['B', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['C', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['D', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['E', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['F', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['G', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['H', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['I', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['J', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~']]
+    board = [[' ', '1', '2', '3', '4', '5','6','7','8','9'], ['A', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['B', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['C', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['D', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['E', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['F', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['G', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['H', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['I', '~', '~', '~', '~', '~', '~', '~', '~', '~'], ['J', '~', '~', '~', '~', '~', '~', '~', '~', '~']]
     return board
+
+
+def big_board_info(player):
+    print(f'''It's time for {player} to set ships. You have the following boats to use:\n
+            -> Carrier (5 blocks)
+            -> Battleship (4 blocks)
+            -> Cruiser (3 blocks)
+            -> 2x Submarine (3 blocks)
+            -> 3x Destroyer (2 blocks)
+        \nPress ENTER to set ships in the following order''')
+    input()
+
+
+def small_board_info(player):
+    print(f'''It's time for {player} to set ships. You have the following boats to use:\n
+            -> Submarine (3 blocks)
+            -> 2x Destroyer (2 blocks)
+        \nPress ENTER to set ships in the following order''')
+    input()
+
+
+
+
+
+
+
+
+
+
+
+
 
 def choose_ship_option():
     user_input = input('''
@@ -43,6 +74,16 @@ Choose option:
             
 ''')
     return user_input
+
+
+
+
+
+
+
+
+
+
 
 def blocking_more_than_2_blocks(user_input):
     #A
