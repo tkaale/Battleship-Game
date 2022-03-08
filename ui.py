@@ -53,7 +53,28 @@ def small_board_info(player):
         \nPress ENTER to set ships in the following order''')
     input()
 
+def lets_start():
+    print('''
+    
+  _      ______ _______ _  _____    _____ _______       _____ _______ _ 
+ | |    |  ____|__   __( )/ ____|  / ____|__   __|/\   |  __ \__   __| |
+ | |    | |__     | |  |/| (___   | (___    | |  /  \  | |__) | | |  | |
+ | |    |  __|    | |     \___ \   \___ \   | | / /\ \ |  _  /  | |  | |
+ | |____| |____   | |     ____) |  ____) |  | |/ ____ \| | \ \  | |  |_|
+ |______|______|  |_|    |_____/  |_____/   |_/_/    \_\_|  \_\ |_|  (_)
+                                                                        
+                                                                        
 
+    ''')
+    input('Press ENTER to continue...')
+
+
+def shooting_info():
+    print_yellow('''\nYou have one shoot per round. 
+     --> when you missed the ship, there will be [Ø]
+     --> when you shoot one part of the ship, there will be [▬]
+     --> when you sink all ship, there will be [▼]''')
+    print_green('\nPLAYER ONE is starting.')
 
 
 

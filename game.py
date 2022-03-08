@@ -5,13 +5,16 @@ import time
 FILE_BOARD_ONE = 'Battleship-Game/board_one.cvs'
 FILE_BOARD_TWO = 'Battleship-Game/board_two.cvs'
 
+SMALL_BOARD_CODED_ONE = ui.board_small()
+SMALL_BOARD_CODED_TWO = ui.board_small()
+BIG_BOARD_CODED_ONE = ui.board_big()
+BIG_BOARD_CODED_TWO = ui.board_big()
+
 COL = 1
 ROW = 0
 
-PLAYER_ONE = 'Player One'
-PLAYER_TWO = 'Player Two'
-
-board_ii = data_menager.get_table_from_file(FILE_BOARD_ONE)
+PLAYER_ONE = 'PLAYER ONE'
+PLAYER_TWO = 'PLAYER TWO'
 
 def choose_board():
     while True:
@@ -40,8 +43,8 @@ def print_board(board, player):
         print(' '.join(sublist))
 
 def print_two_boards(board_one, board_two):
-    ui.print_red('\n PLAYER ONE', end = '\t\t')
-    ui.print_red(' PLAYER TWO\n')
+    print('\n PLAYER ONE', end = '\t\t')
+    print(' PLAYER TWO\n')
     for i in range(0,6):
         print(' '.join(board_one[i]), end = "\t\t")
         print(' '.join(board_two[i]))
@@ -120,7 +123,6 @@ def set_ship_on_board(board, ship_cells, file_name):
     data_menager.overwrite_table_to_file(board, file_name)
     return board
 
-
 def blocking_places_near_ship_horizontal(ship_cells, board_size):
     blocked_cells = []
     for element in ship_cells:
@@ -198,8 +200,8 @@ def check_available_place(board, coordinates):
 
 def setting_ship(board, player, board_size, ships_list, file_name):
     print_board(board, player)
+    ship_list_coordinates = []
     for boat in ships_list:
-        print(boat)
         title = (f"Enter starting coordinate (e.g. B4) for the {boat}: ")
         blocks = (ships_list[boat])
         while True:
@@ -215,6 +217,7 @@ def setting_ship(board, player, board_size, ships_list, file_name):
                         ui.print_red('\nThere is no space for this ship. Try again!')
                         continue
                     else:
+                        ship_list_coordinates.append(ship_cells)
                         board = set_ship_on_board(board, ship_cells, file_name)
                         blocked_cells = blocking_places_near_ship_horizontal(ship_cells, board_size)
                         board = set_blocked_place(board, blocked_cells, file_name)
@@ -231,6 +234,7 @@ def setting_ship(board, player, board_size, ships_list, file_name):
                         board = set_blocked_place(board, blocked_cells, file_name)
                         print_board(board, player)
                         break
+    return ship_list_coordinates
 
 def confirm_ships():
     ui.print_green('\nPress ENTER to hide your ships')
@@ -239,27 +243,51 @@ def confirm_ships():
     for i in range(0,50):
         print('')
 
+def checking_shoot(coordinates, board, board_coded):
+    coordinates_row = coordinates[ROW]
+    coordinates_col = coordinates[COL]
+    for element in board:
+        if element[coordinates_row][coordinates_col] == 'X':
+            element[coordinates_row][coordinates_col] == '▬'
+        if element[coordinates_row][coordinates_col] == '~' or element[coordinates_row][coordinates_col] == '-':
+            element[coordinates_row][coordinates_col] == 'Ø'
+    
+
+
+    
+
+def shooting_the_ships(board, board_one, board_two, board_plr_one, board_plr_two):
+    ui.shooting_info()
+    print_two_boards(board_one, board_two)
+    title = (f"Enter coordinate: ")
+    while True:
+        user_coordinate = user_coordinates_convert(board, user_coordinates(board, title))
+
+
 def main():
     ui.start_title()
     board_size = choose_board()
     board_plr_one = data_menager.get_table_from_file('Battleship-Game/board_one.cvs')
     board_plr_two = data_menager.get_table_from_file('Battleship-Game/board_two.cvs')
-    ships_list_big = {'Carrier (5 blocks)': 5, 'Battleship (4 blocks)': 4, 'Cruiser (3 blocks)': 3, 'Submarine (3 blocks)': 3, 'Submarine 2 (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2, 'Destroyer 3 (2 blocks)': 2}
-    ships_list_small = {'Submarine (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2}
     if board_size == 'big':
-        available_ships(board_size, PLAYER_ONE)
-        setting_ship(board_plr_one, PLAYER_ONE, board_size, ships_list_big, FILE_BOARD_ONE)
-        confirm_ships()
-        available_ships(board_size, PLAYER_TWO)
-        setting_ship(board_plr_two, PLAYER_TWO, board_size, ships_list_big, FILE_BOARD_TWO)
-        confirm_ships()
+        ships_list = {'Carrier (5 blocks)': 5, 'Battleship (4 blocks)': 4, 'Cruiser (3 blocks)': 3, 'Submarine (3 blocks)': 3, 'Submarine 2 (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2, 'Destroyer 3 (2 blocks)': 2}
+        board_one = BIG_BOARD_CODED_ONE
+        board_two = BIG_BOARD_CODED_TWO
     if board_size == 'small':
-        available_ships(board_size, PLAYER_ONE)
-        setting_ship(board_plr_one, PLAYER_ONE, board_size, ships_list_small, FILE_BOARD_ONE)
-        confirm_ships()
-        available_ships(board_size, PLAYER_TWO)
-        setting_ship(board_plr_two, PLAYER_TWO, board_size, ships_list_small, FILE_BOARD_TWO)
-        confirm_ships()
+        ships_list = {'Submarine (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2}
+        board_one = SMALL_BOARD_CODED_ONE
+        board_two = SMALL_BOARD_CODED_TWO
+    available_ships(board_size, PLAYER_ONE)
+    ship_list_one = setting_ship(board_plr_one, PLAYER_ONE, board_size, ships_list, FILE_BOARD_ONE)
+    confirm_ships()
+    available_ships(board_size, PLAYER_TWO)
+    ship_list_two = setting_ship(board_plr_two, PLAYER_TWO, board_size, ships_list, FILE_BOARD_TWO)
+    confirm_ships()
+    ui.lets_start()
+    shooting_the_ships(board_one, board_two)
+
+
+
 
 if __name__ == '__main__':
     main()
