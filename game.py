@@ -243,26 +243,39 @@ def confirm_ships():
     for i in range(0,50):
         print('')
 
-def checking_shoot(coordinates, board, board_coded):
+def checking_shoot(coordinates, board):
     coordinates_row = coordinates[ROW]
     coordinates_col = coordinates[COL]
-    for element in board:
-        if element[coordinates_row][coordinates_col] == 'X':
-            element[coordinates_row][coordinates_col] == '▬'
-        if element[coordinates_row][coordinates_col] == '~' or element[coordinates_row][coordinates_col] == '-':
-            element[coordinates_row][coordinates_col] == 'Ø'
+    if board[coordinates_row][coordinates_col] == 'X':
+        return 'shoot'
+    if board[coordinates_row][coordinates_col] == '~' or board[coordinates_row][coordinates_col] == '-':
+        return 'missed'
     
 
-
-    
-
-def shooting_the_ships(board, board_one, board_two, board_plr_one, board_plr_two):
+def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two):
     ui.shooting_info()
     print_two_boards(board_one, board_two)
-    title = (f"Enter coordinate: ")
-    while True:
-        user_coordinate = user_coordinates_convert(board, user_coordinates(board, title))
-
+    while True: 
+        title_one = (f"PLAYER ONE: Enter coordinate: ")
+        user_coordinate = user_coordinates_convert(board_two, user_coordinates(board_two, title_one))
+        shoot = checking_shoot(user_coordinate, board_plr_two)
+        if shoot == 'shoot':
+            board_two[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
+            ui.print_green("\nYou hit the ship!")
+        if shoot == 'missed':
+            board_two[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
+            ui.print_red("\nYou missed the ship!")
+        print_two_boards(board_one, board_two)
+        title_two = (f"PLAYER TWO: Enter coordinate: ")
+        user_coordinate = user_coordinates_convert(board_one, user_coordinates(board_one, title_two))
+        shoot = checking_shoot(user_coordinate, board_plr_one)
+        if shoot == 'shoot':
+            board_one[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
+            ui.print_green("\nYou hit the ship!")
+        if shoot == 'missed':
+            board_one[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
+            ui.print_red("\nYou missed the ship!")
+        print_two_boards(board_one, board_two)
 
 def main():
     ui.start_title()
@@ -284,7 +297,7 @@ def main():
     ship_list_two = setting_ship(board_plr_two, PLAYER_TWO, board_size, ships_list, FILE_BOARD_TWO)
     confirm_ships()
     ui.lets_start()
-    shooting_the_ships(board_one, board_two)
+    shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two)
 
 
 
