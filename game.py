@@ -1,3 +1,4 @@
+from types import new_class
 import data_menager
 import ui
 import time
@@ -274,8 +275,36 @@ def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two):
             ui.print_green("\nYou hit the ship!")
         if shoot == 'missed':
             board_one[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
-            ui.print_red("\nYou missed the ship!")
+            ui.print_red("\nvb dfvbYou missed the ship!")
         print_two_boards(board_one, board_two)
+
+
+def sink_the_ship(board, ship_list):
+    true_false_check = []
+    counter = 1
+    for sublist in ship_list:
+        ships_sign = []
+        for element in sublist:
+            ships_sign.append(board[element[ROW]][element[COL]])
+        check = all(i == ships_sign[0] for i in ships_sign)
+        if check == True:
+            true_false_check.append(0 + counter)
+            counter += 1
+        else:
+            true_false_check.append(False)
+    for element in true_false_check:
+        if type(element) == int:
+            ship_index = true_false_check.index(element)
+            for coordination in ship_list[ship_index]:
+                board[coordination[ROW]][coordination[COL]] = '▼'
+    return board
+
+        
+        
+
+
+
+sink_the_ship([[' ', '1', '2', '3', '4', '5'], ['A', '▬', '▬', '▬', '~', '~'], ['B', '~', '~', '~', '~', '~'], ['C', '▬', '▬', '~', '~', '~'], ['D', '~', '~', '~', '~', '~'], ['E', '▬', '~', '~', '~', '~']], [[[1, 1], [1, 2], [1, 3]], [[3, 1], [3, 2]], [[5, 1], [5, 2]]] )
 
 def main():
     ui.start_title()
@@ -302,6 +331,6 @@ def main():
 
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 
