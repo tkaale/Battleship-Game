@@ -230,6 +230,7 @@ def setting_ship(board, player, board_size, ships_list, file_name):
                         ui.print_red('\nThere is no space for this ship. Try again!')
                         continue
                     else:
+                        ship_list_coordinates.append(ship_cells)
                         board = set_ship_on_board(board, ship_cells, file_name)
                         blocked_cells = blocking_places_near_ship_vertical(ship_cells, board_size)
                         board = set_blocked_place(board, blocked_cells, file_name)
@@ -251,33 +252,6 @@ def checking_shoot(coordinates, board):
         return 'shoot'
     if board[coordinates_row][coordinates_col] == '~' or board[coordinates_row][coordinates_col] == '-':
         return 'missed'
-    
-
-def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two):
-    ui.shooting_info()
-    print_two_boards(board_one, board_two)
-    while True: 
-        title_one = (f"PLAYER ONE: Enter coordinate: ")
-        user_coordinate = user_coordinates_convert(board_two, user_coordinates(board_two, title_one))
-        shoot = checking_shoot(user_coordinate, board_plr_two)
-        if shoot == 'shoot':
-            board_two[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
-            ui.print_green("\nYou hit the ship!")
-        if shoot == 'missed':
-            board_two[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
-            ui.print_red("\nYou missed the ship!")
-        print_two_boards(board_one, board_two)
-        title_two = (f"PLAYER TWO: Enter coordinate: ")
-        user_coordinate = user_coordinates_convert(board_one, user_coordinates(board_one, title_two))
-        shoot = checking_shoot(user_coordinate, board_plr_one)
-        if shoot == 'shoot':
-            board_one[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
-            ui.print_green("\nYou hit the ship!")
-        if shoot == 'missed':
-            board_one[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
-            ui.print_red("\nvb dfvbYou missed the ship!")
-        print_two_boards(board_one, board_two)
-
 
 def sink_the_ship(board, ship_list):
     true_false_check = []
@@ -286,8 +260,8 @@ def sink_the_ship(board, ship_list):
         ships_sign = []
         for element in sublist:
             ships_sign.append(board[element[ROW]][element[COL]])
-        check = all(i == ships_sign[0] for i in ships_sign)
-        if check == True:
+        check = set(ships_sign)
+        if check == {'▬'}:
             true_false_check.append(0 + counter)
             counter += 1
         else:
@@ -299,12 +273,36 @@ def sink_the_ship(board, ship_list):
                 board[coordination[ROW]][coordination[COL]] = '▼'
     return board
 
-        
-        
+def check_winner():
+    pass
 
 
-
-sink_the_ship([[' ', '1', '2', '3', '4', '5'], ['A', '▬', '▬', '▬', '~', '~'], ['B', '~', '~', '~', '~', '~'], ['C', '▬', '▬', '~', '~', '~'], ['D', '~', '~', '~', '~', '~'], ['E', '▬', '~', '~', '~', '~']], [[[1, 1], [1, 2], [1, 3]], [[3, 1], [3, 2]], [[5, 1], [5, 2]]] )
+def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two):
+    ui.shooting_info()
+    print_two_boards(board_one, board_two)
+    while True: 
+        title_one = (f"PLAYER ONE: Enter coordinate: ")
+        user_coordinate = user_coordinates_convert(board_two, user_coordinates(board_two, title_one))
+        shoot = checking_shoot(user_coordinate, board_plr_two)
+        if shoot == 'shoot':
+            board_two[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
+            ui.print_green("\nYou hit the ship!")
+            sink_the_ship(board_two, ship_list_two)
+        if shoot == 'missed':
+            board_two[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
+            ui.print_red("\nYou missed the ship!")
+        print_two_boards(board_one, board_two)
+        title_two = (f"PLAYER TWO: Enter coordinate: ")
+        user_coordinate = user_coordinates_convert(board_one, user_coordinates(board_one, title_two))
+        shoot = checking_shoot(user_coordinate, board_plr_one)
+        if shoot == 'shoot':
+            board_one[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
+            ui.print_green("\nYou hit the ship!")
+            sink_the_ship(board_one, ship_list_one)
+        if shoot == 'missed':
+            board_one[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
+            ui.print_red("\nvb dfvbYou missed the ship!")
+        print_two_boards(board_one, board_two)
 
 def main():
     ui.start_title()
@@ -326,11 +324,11 @@ def main():
     ship_list_two = setting_ship(board_plr_two, PLAYER_TWO, board_size, ships_list, FILE_BOARD_TWO)
     confirm_ships()
     ui.lets_start()
-    shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two)
+    shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two)
 
 
 
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
 
