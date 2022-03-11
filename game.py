@@ -271,16 +271,23 @@ def sink_the_ship(board, ship_list):
             ship_index = true_false_check.index(element)
             for coordination in ship_list[ship_index]:
                 board[coordination[ROW]][coordination[COL]] = '▼'
+            print('You sink the ship!')
     return board
 
-def check_winner():
-    pass
+def check_winner(board, ships_quantity):
+    one_list = []
+    for sublist in board:
+        for item in sublist:
+            one_list.append(item)
+    if one_list.count('▼') == ships_quantity:
+        return True
+    else:
+        return False
 
-
-def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two):
+def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two, ships_quantity):
     ui.shooting_info()
     print_two_boards(board_one, board_two)
-    while True: 
+    while check_winner(board, ships_quantity) == True: 
         title_one = (f"PLAYER ONE: Enter coordinate: ")
         user_coordinate = user_coordinates_convert(board_two, user_coordinates(board_two, title_one))
         shoot = checking_shoot(user_coordinate, board_plr_two)
@@ -288,6 +295,11 @@ def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_
             board_two[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
             ui.print_green("\nYou hit the ship!")
             sink_the_ship(board_two, ship_list_two)
+            print(check_winner(board_two, ships_quantity))
+            if check_winner(board_two, ships_quantity) == True:
+                ui.winner()
+                print('PLAYER ONE win the battle!')
+                break
         if shoot == 'missed':
             board_two[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
             ui.print_red("\nYou missed the ship!")
@@ -299,6 +311,10 @@ def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_
             board_one[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
             ui.print_green("\nYou hit the ship!")
             sink_the_ship(board_one, ship_list_one)
+            if check_winner(board_two, ships_quantity) == True:
+                ui.winner()
+                print('\nPLAYER TWO win the battle!')
+                break
         if shoot == 'missed':
             board_one[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
             ui.print_red("\nvb dfvbYou missed the ship!")
@@ -310,13 +326,15 @@ def main():
     board_plr_one = data_menager.get_table_from_file('Battleship-Game/board_one.cvs')
     board_plr_two = data_menager.get_table_from_file('Battleship-Game/board_two.cvs')
     if board_size == 'big':
-        ships_list = {'Carrier (5 blocks)': 5, 'Battleship (4 blocks)': 4, 'Cruiser (3 blocks)': 3, 'Submarine (3 blocks)': 3, 'Submarine 2 (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2, 'Destroyer 3 (2 blocks)': 2}
+        ships_list = {'Carrier (5 blocks)': 5, 'Battleship (4 blocks)': 4, 'Cruiser (3 blocks)': 3, 'Submarine (3 blocks)': 3, 'Submarine 2 (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2, 'Destroyer 3 (2 blocks)': 2} #24
         board_one = BIG_BOARD_CODED_ONE
         board_two = BIG_BOARD_CODED_TWO
+        ships_quantity = 24
     if board_size == 'small':
-        ships_list = {'Submarine (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2}
+        ships_list = {'Submarine (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2} #6
         board_one = SMALL_BOARD_CODED_ONE
         board_two = SMALL_BOARD_CODED_TWO
+        ships_quantity = 7
     available_ships(board_size, PLAYER_ONE)
     ship_list_one = setting_ship(board_plr_one, PLAYER_ONE, board_size, ships_list, FILE_BOARD_ONE)
     confirm_ships()
@@ -324,7 +342,7 @@ def main():
     ship_list_two = setting_ship(board_plr_two, PLAYER_TWO, board_size, ships_list, FILE_BOARD_TWO)
     confirm_ships()
     ui.lets_start()
-    shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two)
+    shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two, ships_quantity)
 
 
 
