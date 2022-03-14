@@ -274,20 +274,26 @@ def sink_the_ship(board, ship_list):
             print('You sink the ship!')
     return board
 
-def check_winner(board, ships_quantity):
+def check_winner(board_one, board_two, ships_quantity):
     one_list = []
-    for sublist in board:
+    for sublist in board_one:
         for item in sublist:
             one_list.append(item)
-    if one_list.count('▼') == ships_quantity:
+    two_list = []
+    for sublist in board_two:
+        for item in sublist:
+            two_list.append(item)
+    if one_list.count('▼') == ships_quantity or two_list.count('▼') == ships_quantity:
+        ui.winner()
+        print('You have win the battle!')
         return True
     else:
-        return False
+        return False     
 
 def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two, ships_quantity):
     ui.shooting_info()
     print_two_boards(board_one, board_two)
-    while check_winner(board, ships_quantity) == True: 
+    while check_winner(board_one, board_two, ships_quantity) == False: 
         title_one = (f"PLAYER ONE: Enter coordinate: ")
         user_coordinate = user_coordinates_convert(board_two, user_coordinates(board_two, title_one))
         shoot = checking_shoot(user_coordinate, board_plr_two)
@@ -295,11 +301,6 @@ def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_
             board_two[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
             ui.print_green("\nYou hit the ship!")
             sink_the_ship(board_two, ship_list_two)
-            print(check_winner(board_two, ships_quantity))
-            if check_winner(board_two, ships_quantity) == True:
-                ui.winner()
-                print('PLAYER ONE win the battle!')
-                break
         if shoot == 'missed':
             board_two[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
             ui.print_red("\nYou missed the ship!")
@@ -311,14 +312,11 @@ def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_
             board_one[user_coordinate[ROW]][user_coordinate[COL]] = '▬'
             ui.print_green("\nYou hit the ship!")
             sink_the_ship(board_one, ship_list_one)
-            if check_winner(board_two, ships_quantity) == True:
-                ui.winner()
-                print('\nPLAYER TWO win the battle!')
-                break
         if shoot == 'missed':
             board_one[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
             ui.print_red("\nvb dfvbYou missed the ship!")
         print_two_boards(board_one, board_two)
+
 
 def main():
     ui.start_title()
