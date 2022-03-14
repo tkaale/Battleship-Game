@@ -43,10 +43,10 @@ def print_board(board, player):
     for sublist in board:
         print(' '.join(sublist))
 
-def print_two_boards(board_one, board_two):
+def print_two_boards(board_one, board_two, board_size):
     print('\n PLAYER ONE', end = '\t\t')
     print(' PLAYER TWO\n')
-    for i in range(0,6):
+    for i in range(0, board_size):
         print(' '.join(board_one[i]), end = "\t\t")
         print(' '.join(board_two[i]))
 
@@ -290,9 +290,9 @@ def check_winner(board_one, board_two, ships_quantity):
     else:
         return False     
 
-def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two, ships_quantity):
+def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two, ships_quantity, board_size_q):
     ui.shooting_info()
-    print_two_boards(board_one, board_two)
+    print_two_boards(board_one, board_two, board_size_q)
     while check_winner(board_one, board_two, ships_quantity) == False: 
         title_one = (f"PLAYER ONE: Enter coordinate: ")
         user_coordinate = user_coordinates_convert(board_two, user_coordinates(board_two, title_one))
@@ -304,7 +304,7 @@ def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_
         if shoot == 'missed':
             board_two[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
             ui.print_red("\nYou missed the ship!")
-        print_two_boards(board_one, board_two)
+        print_two_boards(board_one, board_two, board_size_q)
         title_two = (f"PLAYER TWO: Enter coordinate: ")
         user_coordinate = user_coordinates_convert(board_one, user_coordinates(board_one, title_two))
         shoot = checking_shoot(user_coordinate, board_plr_one)
@@ -315,7 +315,7 @@ def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_
         if shoot == 'missed':
             board_one[user_coordinate[ROW]][user_coordinate[COL]] = 'Ø'
             ui.print_red("\nvb dfvbYou missed the ship!")
-        print_two_boards(board_one, board_two)
+        print_two_boards(board_one, board_two, board_size_q)
 
 
 def main():
@@ -328,11 +328,13 @@ def main():
         board_one = BIG_BOARD_CODED_ONE
         board_two = BIG_BOARD_CODED_TWO
         ships_quantity = 24
+        board_size_q = 10
     if board_size == 'small':
         ships_list = {'Submarine (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2} #6
         board_one = SMALL_BOARD_CODED_ONE
         board_two = SMALL_BOARD_CODED_TWO
         ships_quantity = 7
+        board_size_q = 6
     available_ships(board_size, PLAYER_ONE)
     ship_list_one = setting_ship(board_plr_one, PLAYER_ONE, board_size, ships_list, FILE_BOARD_ONE)
     confirm_ships()
@@ -340,7 +342,7 @@ def main():
     ship_list_two = setting_ship(board_plr_two, PLAYER_TWO, board_size, ships_list, FILE_BOARD_TWO)
     confirm_ships()
     ui.lets_start()
-    shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two, ships_quantity)
+    shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_list_one, ship_list_two, ships_quantity, board_size_q)
 
 
 
