@@ -3,8 +3,8 @@ import data_menager
 import ui
 import time
 
-FILE_BOARD_ONE = 'Battleship-Game/board_one.cvs'
-FILE_BOARD_TWO = 'Battleship-Game/board_two.cvs'
+FILE_BOARD_ONE = 'board_one.cvs'
+FILE_BOARD_TWO = 'board_two.cvs'
 
 SMALL_BOARD_CODED_ONE = ui.board_small()
 SMALL_BOARD_CODED_TWO = ui.board_small()
@@ -22,15 +22,15 @@ def choose_board():
         user_input = input('Do you wanna play big or small board? [B] BIG / [S] SMALL: ').upper()
         if user_input == 'B':
             board = ui.board_big()
-            data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_one.cvs')
-            data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_two.cvs')
+            data_menager.overwrite_table_to_file(board, 'board_one.cvs')
+            data_menager.overwrite_table_to_file(board, 'board_two.cvs')
             ui.print_green('\nYou choose BIG board.\n')
             board_size = 'big'
             return board_size
         if user_input == 'S':
             board = ui.board_small()
-            data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_one.cvs')
-            data_menager.overwrite_table_to_file(board, 'Battleship-Game/board_two.cvs')
+            data_menager.overwrite_table_to_file(board, 'board_one.cvs')
+            data_menager.overwrite_table_to_file(board, 'board_two.cvs')
             ui.print_green('\nYou choose SMALL board.\n')
             board_size = 'small'
             return board_size
@@ -321,8 +321,8 @@ def shooting_the_ships(board_one, board_two, board_plr_one, board_plr_two, ship_
 def main():
     ui.start_title()
     board_size = choose_board()
-    board_plr_one = data_menager.get_table_from_file('Battleship-Game/board_one.cvs')
-    board_plr_two = data_menager.get_table_from_file('Battleship-Game/board_two.cvs')
+    board_plr_one = data_menager.get_table_from_file('board_one.cvs')
+    board_plr_two = data_menager.get_table_from_file('board_two.cvs')
     if board_size == 'big':
         ships_list = {'Carrier (5 blocks)': 5, 'Battleship (4 blocks)': 4, 'Cruiser (3 blocks)': 3, 'Submarine (3 blocks)': 3, 'Submarine 2 (3 blocks)': 3, 'Destroyer (2 blocks)': 2, 'Destroyer 2 (2 blocks)': 2, 'Destroyer 3 (2 blocks)': 2} #24
         board_one = BIG_BOARD_CODED_ONE
